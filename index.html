@@ -44,11 +44,19 @@
         یک نامه برای تو دارم…
       </div>
 
-      <button
-        class="envelope"
-        id="openEnvelope"
-        aria-label="باز کردن نامه"
-      >
+<button
+  type="button"
+  class="envelope"
+  id="openEnvelope"
+  aria-label="باز کردن نامه"
+  onclick="
+    this.classList.add('open');
+    setTimeout(function(){
+      document.getElementById('envelopeScene').classList.add('hidden');
+      document.getElementById('card').classList.remove('hidden');
+    }, 1100);
+"
+>
 
         <div class="envelope-back"></div>
 
