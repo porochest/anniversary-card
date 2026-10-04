@@ -1,9 +1,4 @@
 ```javascript
-// ============================================
-// کارت سالگرد پوریا و مهسا ❤️
-// نسخه اصلاح‌شده
-// ============================================
-
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/xeaejvol";
 
 const envelope = document.getElementById("openEnvelope");
@@ -19,96 +14,60 @@ let musicTimer = null;
 let musicOn = false;
 
 
-// ============================================
+// ===============================
 // موسیقی
-// ============================================
+// ===============================
 
 function startMusic() {
   if (musicOn) return;
 
   try {
-    const AudioContext =
-      window.AudioContext || window.webkitAudioContext;
-
-    if (!AudioContext) {
-      console.log("AudioContext پشتیبانی نمی‌شود.");
-      return;
-    }
-
-    audioCtx = audioCtx || new AudioContext();
-
-    if (audioCtx.state === "suspended") {
-      audioCtx.resume().catch(() => {});
-    }
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
 
     const notes = [
-      261.63,
-      329.63,
-      392.00,
-      523.25,
-      392.00,
-      329.63,
-      293.66,
-      349.23,
-      440.00,
-      523.25,
-      440.00,
-      349.23
+      261.63, 329.63, 392, 523.25,
+      392, 329.63, 293.66, 349.23,
+      440, 523.25, 440, 349.23
     ];
 
     let i = 0;
 
-    const play = () => {
+    function playNote() {
       if (!audioCtx) return;
 
-      try {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
 
-        osc.type = "sine";
-        osc.frequency.value = notes[i % notes.length];
-        i++;
+      osc.type = "sine";
+      osc.frequency.value = notes[i++ % notes.length];
 
-        gain.gain.setValueAtTime(
-          0,
-          audioCtx.currentTime
-        );
+      gain.gain.setValueAtTime(0, audioCtx.currentTime);
+      gain.gain.linearRampToValueAtTime(
+        0.045,
+        audioCtx.currentTime + 0.04
+      );
+      gain.gain.exponentialRampToValueAtTime(
+        0.001,
+        audioCtx.currentTime + 0.62
+      );
 
-        gain.gain.linearRampToValueAtTime(
-          0.045,
-          audioCtx.currentTime + 0.04
-        );
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
 
-        gain.gain.exponentialRampToValueAtTime(
-          0.001,
-          audioCtx.currentTime + 0.62
-        );
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.65);
+    }
 
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-
-        osc.start();
-
-        osc.stop(
-          audioCtx.currentTime + 0.65
-        );
-      } catch (e) {
-        console.log("خطا در پخش موسیقی:", e);
-      }
-    };
-
-    play();
-
-    musicTimer = setInterval(play, 650);
-
+    playNote();
+    musicTimer = setInterval(playNote, 650);
     musicOn = true;
 
     if (musicBtn) {
       musicBtn.textContent = "♫";
     }
 
-  } catch (e) {
-    console.log("موسیقی اجرا نشد:", e);
+  } catch (error) {
+    console.log("Music error:", error);
   }
 }
 
@@ -127,34 +86,25 @@ function stopMusic() {
 }
 
 
-// ============================================
+// ===============================
 // قلب‌های شناور
-// ============================================
+// ===============================
 
 function floatingHeart() {
+  const container = document.querySelector(".hearts");
 
-  const heartsContainer =
-    document.querySelector(".hearts");
-
-  if (!heartsContainer) return;
+  if (!container) return;
 
   const h = document.createElement("span");
 
   h.className = "heart";
+  h.textContent = Math.random() > 0.5 ? "♥" : "♡";
 
-  h.textContent =
-    Math.random() > 0.5 ? "♥" : "♡";
+  h.style.left = Math.random() * 100 + "vw";
+  h.style.fontSize = (12 + Math.random() * 22) + "px";
+  h.style.animationDuration = (5 + Math.random() * 5) + "s";
 
-  h.style.left =
-    Math.random() * 100 + "vw";
-
-  h.style.fontSize =
-    12 + Math.random() * 22 + "px";
-
-  h.style.animationDuration =
-    5 + Math.random() * 5 + "s";
-
-  heartsContainer.appendChild(h);
+  container.appendChild(h);
 
   setTimeout(() => {
     h.remove();
@@ -164,68 +114,72 @@ function floatingHeart() {
 setInterval(floatingHeart, 900);
 
 
-// ============================================
-// باز کردن پاکت
-// ============================================
+// ===============================
+// باز کردن نامه
+// ===============================
 
 function showCard(event) {
 
-  // جلوگیری از رفتار پیش‌فرض دکمه
   if (event) {
     event.preventDefault();
+    event.stopPropagation();
   }
 
-  // باز شدن پاکت
+  if (!envelope) return;
+
   envelope.classList.add("open");
 
-  // بعد از انیمیشن پاکت، کارت نمایش داده شود
   setTimeout(() => {
 
-    envelopeScene.classList.add("hidden");
-
-    card.classList.remove("hidden");
-
-    // موسیقی نباید مانع باز شدن کارت شود
-    try {
-      startMusic();
-    } catch (e) {
-      console.log(e);
+    if (envelopeScene) {
+      envelopeScene.classList.add("hidden");
     }
+
+    if (card) {
+      card.classList.remove("hidden");
+    }
+
+    startMusic();
 
   }, 1100);
 }
 
 
-// فقط یک بار رویداد باز کردن پاکت ثبت می‌شود
-envelope.addEventListener("click", showCard);
+// اگر دکمه وجود داشت
+if (envelope) {
+  envelope.addEventListener("click", showCard);
+}
 
 
-// ============================================
+// ===============================
 // دکمه موسیقی
-// ============================================
+// ===============================
 
-musicBtn.addEventListener("click", (event) => {
+if (musicBtn) {
 
-  // جلوگیری از هر رفتار ناخواسته
-  event.preventDefault();
-  event.stopPropagation();
+  musicBtn.addEventListener("click", function(event) {
 
-  if (musicOn) {
-    stopMusic();
-  } else {
-    startMusic();
-  }
-});
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (musicOn) {
+      stopMusic();
+    } else {
+      startMusic();
+    }
+
+  });
+
+}
 
 
-// ============================================
+// ===============================
 // ارسال انتخاب به Formspree
-// ============================================
+// ===============================
 
 async function sendChoice(choice) {
 
-  const time =
-    new Date().toLocaleString("fa-IR");
+  const time = new Date().toLocaleString("fa-IR");
 
   const payload = {
     choice: choice,
@@ -233,119 +187,123 @@ async function sendChoice(choice) {
     page: window.location.href
   };
 
-  // ذخیره پشتیبان روی دستگاه
+  // ذخیره روی همان دستگاه
   localStorage.setItem(
     "anniversary_choice",
     JSON.stringify(payload)
   );
 
-  const formData = new FormData();
-
-  formData.append(
-    "choice",
-    choice
-  );
-
-  formData.append(
-    "time",
-    time
-  );
-
-  formData.append(
-    "page",
-    window.location.href
-  );
-
-  formData.append(
-    "_subject",
-    "🎁 انتخاب هدیه سالگرد از طرف مهسا ❤️"
-  );
-
   try {
+
+    const formData = new FormData();
+
+    formData.append("choice", choice);
+    formData.append("time", time);
+    formData.append("page", window.location.href);
+
+    formData.append(
+      "_subject",
+      "🎁 انتخاب هدیه سالگرد از طرف مهسا ❤️"
+    );
 
     const response = await fetch(
       FORMSPREE_ENDPOINT,
       {
         method: "POST",
+        body: formData,
         headers: {
           "Accept": "application/json"
-        },
-        body: formData
+        }
       }
     );
 
     if (!response.ok) {
-      throw new Error(
-        "Formspree request failed"
-      );
+      console.log("Formspree error:", response.status);
+      return false;
     }
+
+    console.log("Choice sent successfully.");
 
     return true;
 
   } catch (error) {
 
-    console.error(
-      "خطا در ارسال Formspree:",
-      error
-    );
+    console.log("Formspree connection error:", error);
 
     return false;
   }
 }
 
 
-// ============================================
+// ===============================
 // انتخاب هدیه
-// ============================================
+// ===============================
 
-choices.addEventListener(
-  "click",
-  async (event) => {
+if (choices) {
 
-    const button =
-      event.target.closest("button");
+  choices.addEventListener("click", async function(event) {
+
+    const button = event.target.closest("button");
 
     if (!button) return;
 
-    const choice =
-      button.dataset.choice;
+    event.preventDefault();
+    event.stopPropagation();
+
+    const choice = button.dataset.choice;
+
+    if (!choice) return;
+
 
     // جلوگیری از انتخاب دوباره
-    choices
-      .querySelectorAll("button")
-      .forEach((btn) => {
-        btn.disabled = true;
-      });
+    const allButtons = choices.querySelectorAll("button");
 
-    // ارسال به ایمیل
-    const sent =
-      await sendChoice(choice);
+    allButtons.forEach(function(btn) {
+      btn.disabled = true;
+    });
+
+
+    // تغییر ظاهری دکمه
+    button.style.transform = "scale(0.97)";
+
+
+    // ارسال انتخاب
+    // منتظر ایمیل نمی‌مانیم تا صفحه گیر نکند
+    sendChoice(choice);
+
 
     // نمایش نتیجه
-    resultText.innerHTML =
-      "پس انتخابت <strong>«" +
-      choice +
-      "»</strong> بود! 😍";
+    setTimeout(function() {
 
-    card.classList.add("hidden");
+      if (resultText) {
+        resultText.textContent =
+          "پس انتخابت «" + choice + "» بود! 😍";
+      }
 
-    result.classList.remove("hidden");
+      if (card) {
+        card.classList.add("hidden");
+      }
 
-    stopMusic();
+      if (result) {
+        result.classList.remove("hidden");
+      }
 
-    // انفجار قلب ❤️
-    for (let i = 0; i < 12; i++) {
-      setTimeout(
-        floatingHeart,
-        i * 130
-      );
-    }
+      stopMusic();
 
-    if (!sent) {
-      console.warn(
-        "انتخاب ثبت شد، اما ارسال ایمیل موفق نبود."
-      );
-    }
-  }
-);
+
+      // جشن قلب‌ها ❤️
+      for (let i = 0; i < 12; i++) {
+
+        setTimeout(
+          floatingHeart,
+          i * 130
+        );
+
+      }
+
+    }, 250);
+
+  });
+
+}
 ```
