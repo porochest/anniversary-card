@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+
+<head>
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
+
+  <meta
+    name="theme-color"
+    content="#5a1735"
+  >
+
+  <meta
+    name="description"
+    content="یک کارت‌پستال عاشقانه و تعاملی برای سالگرد آشنایی"
+  >
+
+  <title>برای تو ❤️</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="hearts" aria-hidden="true"></div>
+
+  <main class="app">
+
+    <!-- ========================= -->
+    <!-- پاکت نامه -->
+    <!-- ========================= -->
+
+    <section
+      class="envelope-scene"
+      id="envelopeScene"
+    >
+
+      <div class="hint">
+        یک نامه برای تو دارم…
+      </div>
+
+      <button
+        class="envelope"
+        id="openEnvelope"
+        aria-label="باز کردن نامه"
+      >
+
+        <div class="envelope-back"></div>
+
+        <div class="letter-preview">
+          <span>برای تو ❤️</span>
+        </div>
+
+        <div class="flap"></div>
+
+        <div class="envelope-front"></div>
+
+        <div class="seal">
+          ♥
+        </div>
+
+      </button>
+
+      <p class="tap">
+        برای باز کردن، روی پاکت بزن
+      </p>
+
+    </section>
+
+
+    <!-- ========================= -->
+    <!-- کارت عاشقانه -->
+    <!-- ========================= -->
+
+    <section
+      class="card hidden"
+      id="card"
+    >
+
+      <button
+        class="music"
+        id="musicBtn"
+        aria-label="موسیقی"
+      >
+        ♫
+      </button>
+
+      <div class="sparkles">
+        ✦　♡　✦
+      </div>
+
+      <p class="eyebrow">
+        16 مهر
+      </p>
+
+      <p class="eyebrow">
+        یک روز خاص برای ما
+      </p>
+
+      <h2>
+        سالگرد آشنایی‌مون مبارک، مهسای دلم ❤️
+      </h2>
+
+      <p class="letter-text">
+
+        شاید سال‌ها بگذره و اتفاق‌های زیادی
+        توی زندگی‌مون بیفته،
+
+        <br>
+
+        اما بعضی روزها هیچ‌وقت معمولی نمی‌شن…
+
+        <br><br>
+
+        روزی که با تو آشنا شدم،
+        یکی از قشنگ‌ترین اتفاق‌های زندگی من بود.
+
+        <br>
+
+        ممنونم که کنارمی و با هم داریم
+        زندگی‌مون رو می‌سازیم.
+
+        <br><br>
+
+        حالا می‌خوام برای این روز،
+        انتخاب با خودت باشه… 😊
+
+      </p>
+
+
+      <!-- ========================= -->
+      <!-- انتخاب هدیه -->
+      <!-- ========================= -->
+
+      <div class="question-box">
+
+        <div class="question">
+          دوست داری امسال چه هدیه‌ای از من بگیری؟ 🥰
+        </div>
+
+        <div
+          class="choices"
+          id="choices"
+        >
+
+          <button
+            type="button"
+            data-choice="پول نقد 💵"
+          >
+            💵
+            <span>هدیه نقدی</span>
+            <small>
+              هرجور خودت دوست داری خرجش کن
+            </small>
+          </button>
+
+
+          <button
+            type="button"
+            data-choice="کافه ☕"
+          >
+            ☕
+            <span>بریم کافه</span>
+            <small>
+              یک قرار دونفره با قهوه و حرف‌های طولانی
+            </small>
+          </button>
+
+
+          <button
+            type="button"
+            data-choice="رستوران 🍽️"
+          >
+            🍽️
+            <span>بریم رستوران</span>
+            <small>
+              یک شام خوشمزه، فقط من و تو
+            </small>
+          </button>
+
+
+          <button
+            type="button"
+            data-choice="یک جاده‌گردی بارونی 🌧️"
+          >
+            🌧️
+            <span>بزنیم به دل جاده</span>
+            <small>
+              موسیقی، بارون و یک مسیر دونفره
+            </small>
+          </button>
+
+
+          <button
+            type="button"
+            data-choice="تو انتخاب کن 🎁"
+          >
+            🎁
+            <span>تو انتخاب کن!</span>
+            <small>
+              این یکی رو بسپار به من؛ سورپرایزت می‌کنم
+            </small>
+          </button>
+
+
+          <button
+            type="button"
+            data-choice="یک روز کامل با تو 🥰"
+          >
+            🥰
+            <span>یک روز کامل با تو</span>
+            <small>
+              بدون عجله، بدون کار؛ فقط من و تو
+            </small>
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ========================= -->
+    <!-- نتیجه -->
+    <!-- ========================= -->
+
+    <section
+      class="result hidden"
+      id="result"
+    >
+
+      <div class="result-icon">
+        ❤️
+      </div>
+
+      <h2>
+        انتخابت ثبت شد!
+      </h2>
+
+      <p id="resultText"></p>
+
+      <div class="promise">
+        🎁 به‌زودی هدیه‌ات رو از من دریافت می‌کنی…
+      </div>
+
+      <p class="small">
+        حالا فقط بشین و منتظر سورپرایزت باش 😌
+      </p>
+
+    </section>
+
+  </main>
+
+
+  <footer>
+    ساخته شده با عشق، برای یک آدم خاص ❤️
+  </footer>
+
+
+  <script src="script.js"></script>
+
+</body>
+</html>
